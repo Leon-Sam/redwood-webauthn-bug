@@ -4,8 +4,13 @@ import { MetaTags } from '@redwoodjs/web'
 import { useAuth } from 'src/auth'
 
 const HomePage = () => {
-  const { isAuthenticated, client, loading, logOut, reauthenticate } = useAuth()
-  console.log(client)
+  const {
+    isAuthenticated,
+    client: webAuthn,
+    loading,
+    logOut,
+    reauthenticate,
+  } = useAuth()
   return (
     <>
       <MetaTags title="Home" description="Home page" />
@@ -14,7 +19,14 @@ const HomePage = () => {
       <p>
         Find me in <code>./web/src/pages/HomePage/HomePage.tsx</code>
       </p>
+      <Link to={routes.signup()}>Signup</Link>
+      <br />
+      <Link to={routes.login()}>Login</Link>
+
       <p>Is Authenicated? {isAuthenticated ? 'yes' : 'no'}</p>
+      <p>Is WebAuthn Supported? {webAuthn.isSupported ? 'yes' : 'no'}</p>
+      <p>Is WebAuthn Enabled? {webAuthn.isEnabled ? 'yes' : 'no'}</p>
+
       <button
         onClick={() => {
           logOut()
