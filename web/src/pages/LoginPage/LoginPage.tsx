@@ -26,10 +26,13 @@ const LoginPage = ({ type }) => {
     logIn,
     reauthenticate,
   } = useAuth()
+
   const [shouldShowWebAuthn, setShouldShowWebAuthn] = useState(false)
   const [showWebAuthn, setShowWebAuthn] = useState(
     webAuthn.isEnabled() && type !== 'password'
   )
+  const webAuthnSupporteddd = webAuthn.isSupported()
+  console.log('is webauthn supported in main loop submit:', webAuthnSupporteddd)
 
   // should redirect right after login or wait to show the webAuthn prompts?
   useEffect(() => {
@@ -52,8 +55,9 @@ const LoginPage = ({ type }) => {
   }, [])
 
   const onSubmit = async (data) => {
+    console.log('On submit fired')
     const webAuthnSupported = await webAuthn.isSupported()
-
+    console.log('is webauthn supported on submit:', webAuthnSupported)
     if (webAuthnSupported) {
       setShouldShowWebAuthn(true)
     }
@@ -71,8 +75,10 @@ const LoginPage = ({ type }) => {
     } else {
       // user logged in
       if (webAuthnSupported) {
+        console.log('On submit: webauthn is supported')
         setShowWebAuthn(true)
       } else {
+        console.log('show welcome message')
         toast.success(WELCOME_MESSAGE)
       }
     }
@@ -80,6 +86,7 @@ const LoginPage = ({ type }) => {
 
   const onAuthenticate = async () => {
     try {
+      console.log('On authenicate fired')
       await webAuthn.authenticate()
       await reauthenticate()
       toast.success(WELCOME_MESSAGE)
@@ -96,6 +103,7 @@ const LoginPage = ({ type }) => {
 
   const onRegister = async () => {
     try {
+      console.log('On register fired')
       await webAuthn.register()
       toast.success(WELCOME_MESSAGE)
       navigate(REDIRECT)
@@ -105,6 +113,7 @@ const LoginPage = ({ type }) => {
   }
 
   const onSkip = () => {
+    console.log('On skip fired')
     toast.success(WELCOME_MESSAGE)
     setShouldShowWebAuthn(false)
   }
@@ -203,6 +212,7 @@ const LoginPage = ({ type }) => {
   const formToRender = () => {
     if (showWebAuthn) {
       if (webAuthn.isEnabled()) {
+        //This is
         return <AuthWebAuthnPrompt />
       } else {
         return <RegisterWebAuthnPrompt />
@@ -254,6 +264,9 @@ const LoginPage = ({ type }) => {
 
             <div className="rw-segment-main">
               <div className="rw-form-wrapper">{formToRender()}</div>
+              <p>
+                Is WebAuthn Supported? {webAuthn.isSupported() ? 'yes' : 'no'}
+              </p>
             </div>
           </div>
           {linkToRender()}

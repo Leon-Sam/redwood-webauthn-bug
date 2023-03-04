@@ -11,6 +11,7 @@ const HomePage = () => {
     logOut,
     reauthenticate,
   } = useAuth()
+
   return (
     <>
       <MetaTags title="Home" description="Home page" />
@@ -24,8 +25,8 @@ const HomePage = () => {
       <Link to={routes.login()}>Login</Link>
 
       <p>Is Authenicated? {isAuthenticated ? 'yes' : 'no'}</p>
-      <p>Is WebAuthn Supported? {webAuthn.isSupported ? 'yes' : 'no'}</p>
-      <p>Is WebAuthn Enabled? {webAuthn.isEnabled ? 'yes' : 'no'}</p>
+      <p>Is WebAuthn Supported? {webAuthn.isSupported() ? 'yes' : 'no'}</p>
+      <p>Is WebAuthn Enabled? {webAuthn.isEnabled() ? 'yes' : 'no'}</p>
 
       <button
         onClick={() => {
@@ -33,6 +34,13 @@ const HomePage = () => {
         }}
       >
         Logout
+      </button>
+      <button
+        onClick={async () => {
+          console.log('Webauthn supported?', await webAuthn.isSupported())
+        }}
+      >
+        Test support of webauthn (Look in browser console)
       </button>
       <p>
         My default route is named <code>home</code>, link to me with `
